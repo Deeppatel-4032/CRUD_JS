@@ -232,12 +232,13 @@ const deleteRec = (id) => {
 const deleteFun = (id) =>{
   Cart = [...Cart];
   console.log("id",id);
-  let deleteData = Cart.filter((delId) => {
+  let addData = Cart.filter((delId) => {
     return delId.id != id;
 })
-console.log(deleteData);
-  localStorage.setItem("cart_Item", JSON.stringify(deleteData));
-  Storage = getData();
+console.log(addData);
+  localStorage.setItem("cart_Item", JSON.stringify(addData));
+  Cart = getCart();
   viewCart();
+  addCount();
 }
 displyData();
