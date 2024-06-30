@@ -28,10 +28,11 @@ const getData = () => {
     return [];
   }
 };
+let Storage = getData()
 
 // getCart
 const getCart = () => {
-  let cardData = JSON.parse(localStorage.getItem("cardItem"));
+  let cardData = JSON.parse(localStorage.getItem("cart_Item"));
   if (cardData) {
     return cardData;
   } else {
@@ -45,7 +46,7 @@ const addCount = () => {
   carts.innerHTML = Cart.length;
 };
 addCount();
-let Storage = getData();
+Storage = getData();
 
 //create Data
 const DataFrom = () => {
@@ -151,10 +152,10 @@ const getProduct = (id) => {
   let addCart = data.filter((p) => {
     return p.id == id;
   });
-
   Cart = [...Cart, addCart[0]];
   console.log(Cart)
   localStorage.setItem("cart_Item", JSON.stringify(Cart));
+  Cart = getCart();
   addCount();
   viewCart();
 };
@@ -180,7 +181,7 @@ const viewCart = () => {
                           </tr>`;
     });
   } else {
-    addShow.innerHTML = "not a data found";
+    addShow.innerHTML = "Choice your Items";
   }
 };
 viewCart();
@@ -220,25 +221,25 @@ const decFun = (id) => {
 // DeleteFunction
 const deleteRec = (id) => {
   let data = [...Storage];
-  let deleteData = data.filter((delId) => {
+  let deleteItem = data.filter((delId) => {
     return delId.id != id;
   });
-  localStorage.setItem("student_Data", JSON.stringify(deleteData));
+  localStorage.setItem("student_Data", JSON.stringify(deleteItem));
   Storage = getData();
   displyData();
 };
 
-//addCard in delete
+
+//addCard in remove
 const deleteFun = (id) =>{
   Cart = [...Cart];
   console.log("id",id);
-  let addData = Cart.filter((delId) => {
+  let deleteData = Cart.filter((delId) => {
     return delId.id != id;
 })
-console.log(addData);
-  localStorage.setItem("cart_Item", JSON.stringify(addData));
+console.log(deleteData);
+  localStorage.setItem("cart_Item", JSON.stringify(deleteData));
   Cart = getCart();
   viewCart();
-  addCount();
 }
 displyData();
