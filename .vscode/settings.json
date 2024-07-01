@@ -1,3 +1,11 @@
 {
-    "liveServer.settings.port": 5502
+    "liveServer.settings.port": 5502,
+    "json.format.keepLines": true,
+    "liveServer.settings.CustomBrowser": null,
+    "codeium.aggressiveShutdown": true,
+    "editor.codeActionsOnSave": {
+    
+    },
+    "editor.codeLensFontSize": 10,
+    "editor.experimental.asyncTokenizationVerification": true
 }

@@ -2,7 +2,7 @@ let pname = document.getElementById("pname");
 let pmodel = document.getElementById("pmodel");
 let prize = document.getElementById("prize");
 let year = document.getElementById("year");
-let discounte = document.getElementById("discounte");
+let delivery = document.getElementById("delivery");
 
 let recod = document.getElementById("ViweData");
 let cart = document.getElementById("cart");
@@ -28,13 +28,13 @@ const getData = () => {
     return [];
   }
 };
-let Storage = getData()
+let Storage = getData();
 
 // getCart
 const getCart = () => {
-  let cardData = JSON.parse(localStorage.getItem("cart_Item"));
-  if (cardData) {
-    return cardData;
+  let cartData = JSON.parse(localStorage.getItem("cart_Item"));
+  if (cartData) {
+    return cartData;
   } else {
     return [];
   }
@@ -60,7 +60,7 @@ const DataFrom = () => {
       model: pmodel.value,
       prize: prize.value,
       year: year.value,
-      discounte: discounte.value,
+      delivery: delivery.value,
     };
     // updateData
     const updateData = data.map((recod) => {
@@ -70,7 +70,7 @@ const DataFrom = () => {
         return recod;
       }
     });
-
+                                                                                                                                                                                      
     console.log("update", updateData);
     Storage = updateData;
 
@@ -79,26 +79,31 @@ const DataFrom = () => {
   } else {
     if (pname.value == "") {
       errname.innerHTML = "Plase Enter The Product name req...";
+      return false;
     } else {
       errname.innerHTML = "";
     }
     if (pmodel.value == "") {
-      errlname.innerHTML = "Plase Enter The Product Model";
+      errlname.innerHTML = "Enter The Product Model";
+       return false;
     } else {
       errlname.innerHTML = "";
     }
     if (prize.value == "") {
-      erremail.innerHTML = "Plase Enter Product Prize";
+      erremail.innerHTML = "Enter Product Prize";
+       return false;
     } else {
       erremail.innerHTML = "";
     }
     if (year.value == "") {
-      errage.innerHTML = "Plase Enter Order Date";
+      errage.innerHTML = "Enter Booking Date";
+       return false;
     } else {
       errage.innerHTML = "";
     }
-    if (discounte.value == "") {
-      errCourse.innerHTML = "Plase Enter product Discounted";
+    if (delivery.value == "") {
+      errCourse.innerHTML = "Enter the delivery Date";
+       return false;
     } else {
       errCourse.innerHTML = "";
     }
@@ -109,7 +114,7 @@ const DataFrom = () => {
       model: pmodel.value,
       prize: prize.value,
       year: year.value,
-      discounte: discounte.value,
+      delivery: delivery.value,
     };
 
     Storage = [...Storage, obj];
@@ -121,7 +126,7 @@ const DataFrom = () => {
   pmodel.value = "";
   prize.value = "";
   year.value = "";
-  discounte.value = "";
+  delivery.value = "";
 };
 
 // Edit
@@ -140,7 +145,7 @@ const singleRec = (id) => {
   pmodel.value = singleRec[0].model;
   prize.value = singleRec[0].prize;
   year.value = singleRec[0].year;
-  discounte.value = singleRec[0].discounte;
+  delivery.value = singleRec[0].delivery;
   localStorage.setItem("student_Data", JSON.stringify(data));
   isEdit = true;
   isIndex = id;
@@ -149,18 +154,30 @@ const singleRec = (id) => {
 // getProduct
 const getProduct = (id) => {
   let data = [...Storage];
-  let addCart = data.filter((p) => {
-    return p.id == id;
-  });
-  Cart = [...Cart, addCart[0]];
-  console.log(Cart)
+  let addCart = data.find((p) => p.id == id);
+
+  // Check if the product already exists in the cart
+  let existingItem = Cart.find((item) => item.id === addCart.id);
+  if (existingItem) {
+    existingItem.qty += 1; // Increment quantity if already in cart
+  } else {
+    addCart.qty = 1; // Set quantity to 1 for new item
+    Cart.push(addCart); // Add product to the cart
+  }
+
   localStorage.setItem("cart_Item", JSON.stringify(Cart));
   Cart = getCart();
   addCount();
   viewCart();
 };
+//total price
+const totalPriceFun = () => {
+  let totalPrice = Cart.reduce((sum, item) => {
+    return sum + (parseFloat(item.prize) * item.qty); // Calculate total price for each item considering its quantity
+  }, 0);
+  return totalPrice.toFixed(2); // Ensure total price is formatted to 2 decimal places
+};
 
-//viewCard data
 const viewCart = () => {
   addShow.innerHTML = "";
   if (Cart.length > 0) {
@@ -168,23 +185,29 @@ const viewCart = () => {
       addShow.innerHTML += `<tr class="text-center">
                               <td>${pro.id}</td>
                               <td>${pro.name}</td>
-                              <td><button type="button" class="btn btn-primary" onclick = "return decFun(${pro.id})">-</button>
-                              <span>1</span>
-                              <button type="button" class="btn btn-primary">+</button></td>
+                              <td>
+                                <button type="button" class="btn btn-primary" onclick="return incrIment(${pro.id})">+</button>
+                                <span>${pro.qty}</span>
+                                <button type="button" class="btn btn-primary" onclick="return decrIment(${pro.id})">-</button>
+                              </td>
                               <td>${pro.prize}</td>
                               <td>
-                              <button type="button" class="btn btn-danger" onclick ="return deleteFun(${pro.id})">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                              </svg>
+                                <button type="button" class="btn btn-danger" onclick="return deleteFun(${pro.id})">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                  </svg>
+                                </button>
                               </td>
-                          </tr>`;
+                            </tr>`;
     });
+    let totalPrice = totalPriceFun();
+    addShow.innerHTML += `<tr class="text-center">
+                            <td colspan="5">Total Price: ${totalPrice}</td>
+                          </tr>`;
   } else {
-    addShow.innerHTML = "Choice your Items";
+    addShow.innerHTML = "Choose your items";
   }
 };
-viewCart();
 
 // displyDataFunftion
 const displyData = () => {
@@ -197,7 +220,7 @@ const displyData = () => {
                             <td>${rec.model}</td>
                             <td>${rec.prize}</td>
                             <td>${rec.year}</td>
-                            <td>${rec.discounte}</td>
+                            <td>${rec.delivery}</td>
                             <td>
                               <button class="btn btn-outline-primary" onclick = "return singleRec(${rec.id})">Edit</button>
                               <button class="btn btn-outline-danger inline" onclick ="return deleteRec(${rec.id})">Delete</button> 
@@ -210,13 +233,25 @@ const displyData = () => {
 };
 displyData();
 
+//incriment
+const incrIment = (id) => {
+  let item = Cart.find((pro) => pro.id == id);
+  if (item) {
+    item.qty += 1;
+    localStorage.setItem("cart_Item", JSON.stringify(Cart));
+    viewCart();
+  }
+};
 
-//decriment_count
-const decFun = (id) => {
-  console.log("id",id);
-
-  // let decItem = 
-}
+// decrIment
+const decrIment = (id) => {
+  let item = Cart.find((pro) => pro.id == id);
+  if (item && item.qty > 1) {
+    item.qty -= 1;
+    localStorage.setItem("cart_Item", JSON.stringify(Cart));
+    viewCart();
+  }
+};
 
 // DeleteFunction
 const deleteRec = (id) => {
@@ -228,7 +263,6 @@ const deleteRec = (id) => {
   Storage = getData();
   displyData();
 };
-
 
 //addCard in remove
 const deleteFun = (id) =>{
@@ -242,4 +276,5 @@ console.log(deleteData);
   Cart = getCart();
   viewCart();
 }
-displyData();
+
+
