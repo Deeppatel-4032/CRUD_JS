@@ -120,8 +120,9 @@ const DataFrom = () => {
     Storage = [...Storage, obj];
   }
   displyData();
-
   localStorage.setItem("student_Data", JSON.stringify(Storage));
+  
+  // Clear form fields after submission
   pname.value = "";
   pmodel.value = "";
   prize.value = "";
@@ -131,15 +132,12 @@ const DataFrom = () => {
 
 // Edit
 const singleRec = (id) => {
-  console.log("id", id);
-
+  
   let data = [...Storage];
-
   let singleRec = data.filter((d) => {
     return d.id == id;
   });
-  console.log("Edit ID", singleRec[0]);
-
+ 
   id.value = singleRec[0].id;
   pname.value = singleRec[0].name;
   pmodel.value = singleRec[0].model;
@@ -202,12 +200,13 @@ const viewCart = () => {
     });
     let totalPrice = totalPriceFun();
     addShow.innerHTML += `<tr class="text-center">
-                            <td colspan="5">Total Price: ${totalPrice}</td>
+                            <td colspan="5" class="">Total Price: ${totalPrice}</td>
                           </tr>`;
   } else {
     addShow.innerHTML = "Choose your items";
   }
 };
+viewCart();
 
 // displyDataFunftion
 const displyData = () => {
