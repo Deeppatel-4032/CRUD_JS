@@ -11,8 +11,7 @@ setTimeout(() =>{
 console.log("best moment of all indians pepoles.....!");
 
 //setTimeintarverl
-
-let count = 0;
+let count = 0; 
 let fun = setInterval(() => {
     count ++;
     console.log("GodL_Deep", count + 1);

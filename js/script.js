@@ -132,7 +132,6 @@ const DataFrom = () => {
 
 // Edit
 const singleRec = (id) => {
-  
   let data = [...Storage];
   let singleRec = data.filter((d) => {
     return d.id == id;
@@ -150,7 +149,7 @@ const singleRec = (id) => {
 };
 
 // getProduct
-const getProduct = (id) => {
+const getProduct = (id) => {  
   let data = [...Storage];
   let addCart = data.find((p) => p.id == id);
 
@@ -168,14 +167,17 @@ const getProduct = (id) => {
   addCount();
   viewCart();
 };
+
 //total price
 const totalPriceFun = () => {
   let totalPrice = Cart.reduce((sum, item) => {
     return sum + (parseFloat(item.prize) * item.qty); // Calculate total price for each item considering its quantity
+
   }, 0);
   return totalPrice.toFixed(2); // Ensure total price is formatted to 2 decimal places
 };
 
+//view cart
 const viewCart = () => {
   addShow.innerHTML = "";
   if (Cart.length > 0) {
@@ -184,9 +186,9 @@ const viewCart = () => {
                               <td>${pro.id}</td>
                               <td>${pro.name}</td>
                               <td>
-                                <button type="button" class="btn btn-primary" onclick="return incrIment(${pro.id})">+</button>
-                                <span>${pro.qty}</span>
-                                <button type="button" class="btn btn-primary" onclick="return decrIment(${pro.id})">-</button>
+                              <button type="button" class="btn btn-primary" onclick="return decrIment(${pro.id})">-</button>
+                              <span>${pro.qty}</span>
+                              <button type="button" class="btn btn-primary" onclick="return incrIment(${pro.id})">+</button>
                               </td>
                               <td>${pro.prize}</td>
                               <td>
